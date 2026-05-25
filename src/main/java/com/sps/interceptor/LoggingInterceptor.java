@@ -10,6 +10,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 public class LoggingInterceptor implements HandlerInterceptor {
 
+
     private static final Logger log = LoggerFactory.getLogger(LoggingInterceptor.class);
     private Integer requestCount = 0;
     @Override
