@@ -1,6 +1,5 @@
 package com.sps.config;
 
-
 import com.sps.service.CustomUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,7 +20,8 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-        http.authorizeHttpRequests(
+        http.csrf(csrf-> csrf.disable())
+        .authorizeHttpRequests(
                 auth->auth.anyRequest().
                         authenticated()).
                 httpBasic(withDefaults());
