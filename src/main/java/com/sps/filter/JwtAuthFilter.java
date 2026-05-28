@@ -1,26 +1,26 @@
 package com.sps.filter;
 
 import com.sps.service.CustomUserDetailsService;
-import com.sps.service.JwtAuthService;
+import com.sps.service.JWTUtils;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-@Configuration
+@Component
 public class JwtAuthFilter extends OncePerRequestFilter {
 
     @Autowired
-    private JwtAuthService jwtAuthService;
+    private JWTUtils jwtAuthService;
 
     @Autowired
     private CustomUserDetailsService customUserDetailsService;
@@ -31,7 +31,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     * 3. Extract the token from the Header
     * */
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
+                                    FilterChain filterChain) throws ServletException, IOException {
         // 1
         String authHeader = request.getHeader("Authorization");
         String token= null;
@@ -46,18 +47,18 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         if(userName != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             // TODO fetch from db
              UserDetails  userDetails =this.customUserDetailsService.loadUserByUsername(userName);
-             if(userDetails !=null){
+             if(userDetails !=null) {
                  // Validate the token
                  boolean isValid = jwtAuthService.validateToken(userName, userDetails, token);
-                 if(isValid){
+                 if (isValid) {
                      UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails,
                              null, userDetails.getAuthorities());
-                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                    // If valid then need to add those in the security context holder
-                    SecurityContextHolder.getContext().setAuthentication(authToken);
+                     authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                     // If valid then need to add those in the security context holder
+                     SecurityContextHolder.getContext().setAuthentication(authToken);
                  }
              }
-             filterChain.doFilter(request, response);
         }
+        filterChain.doFilter(request, response);
     }
 }
