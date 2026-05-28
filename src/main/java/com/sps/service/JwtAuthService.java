@@ -1,7 +1,7 @@
 package com.sps.service;
 
-
 import com.sps.entity.AuthRequest;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -10,10 +10,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
-import java.time.LocalDate;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -46,7 +46,6 @@ public class JwtAuthService {
         }
     }
 
-
     private String getToken(String userName) {
         try{
             return  Jwts.builder().setSubject(userName).
@@ -60,4 +59,24 @@ public class JwtAuthService {
         }
     }
 
+    public String getUserNameFromToken(String token) {
+     return  extractToken(token).getSubject();
+    }
+
+    private Claims extractToken(String token) {
+        return Jwts.parser().
+                setSigningKey(secretKey).
+                build().
+                parseClaimsJws(token).
+                getBody();
+    }
+
+    public boolean validateToken(String userName, UserDetails userDetails, String token) {
+        return userName.equals(userDetails.getUsername()) && isExpired(token);
+    }
+
+    // Is it expire or not
+    private boolean isExpired(String token) {
+        return extractToken(token).getExpiration().before(new Date());
+    }
 }
