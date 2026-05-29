@@ -33,6 +33,7 @@ public class UserController {
     @GetMapping("/gets")
     public ResponseEntity<List<UserEntity>> getUsers() {
         System.out.println("Get users controllers");
-        return ResponseEntity.ok(new ArrayList<UserEntity>());
+        List<UserEntity> users = this.userService.getAllUserEntity();
+        return ResponseEntity.ok(users);
     }
 }
