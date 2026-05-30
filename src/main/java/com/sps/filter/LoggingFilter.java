@@ -18,6 +18,6 @@ public class LoggingFilter implements Filter {
 
         HttpServletRequest httpRequest = (HttpServletRequest) servletRequest;
         System.out.println("From Custom Filter :: The request url is : "+httpRequest.getRequestURI());
-        filterChain.doFilter(servletRequest, servletResponse);
+     //   filterChain.doFilter(servletRequest, servletResponse);
     }
 }

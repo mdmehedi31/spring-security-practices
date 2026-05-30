@@ -2,12 +2,13 @@ package com.sps.controller;
 
 
 import com.sps.entity.UserEntity;
+import com.sps.entity.UserRegisterDTO;
+import com.sps.entity.UserRegisterResponse;
 import com.sps.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -18,8 +19,9 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/create")
-    public ResponseEntity<String> createUser(@RequestBody UserEntity user) {
-        return null;
+    public ResponseEntity<UserRegisterResponse> createUser(@RequestBody UserRegisterDTO user) {
+        UserRegisterResponse userRegisterResponse  =userService.registerUser(user);
+        return new ResponseEntity<>(userRegisterResponse, HttpStatus.CREATED);
     }
 
     @GetMapping("/get/{userId}")

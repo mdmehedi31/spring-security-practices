@@ -11,7 +11,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -21,7 +20,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity // For enabling method level security
+//@EnableMethodSecurity // For enabling method level security
 public class SecurityConfig {
 
     @Autowired
@@ -34,6 +33,7 @@ public class SecurityConfig {
         .authorizeHttpRequests(
                 auth->auth.requestMatchers("/auth/**").
                         permitAll().
+                        requestMatchers(HttpMethod.POST,"/user/**").permitAll().
                     //    requestMatchers("/user/gets").hasRole(Role.USER.name()).
                    //     requestMatchers(HttpMethod.POST,"/msg/**").hasAuthority(Permission.WRITE.name()).
                     //    requestMatchers(HttpMethod.PUT,"/msg/**").hasAuthority(Permission.WRITE.name()).
