@@ -24,7 +24,7 @@ public class LoggingController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    @GetMapping("/get-log")
+    @GetMapping("/get-log-by-id/{logId}")
     public ResponseEntity<LoggingEntity> getLogById(@PathVariable Integer logId) {
         LoggingEntity loggingEntity = this.loggingService.getLoggedById(logId);
         return new ResponseEntity<>(loggingEntity, HttpStatus.OK);

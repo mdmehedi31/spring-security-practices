@@ -34,7 +34,7 @@ public class LoggingService {
         }
     }
 
-//    @PostAuthorize("returnObject.createdByName == authentication.details.userName")
+    @PostAuthorize("returnObject.createdByName == authentication.name")
     public LoggingEntity getLoggedById(int id) {
         try{
             return this.logginRepository.findById(id).
