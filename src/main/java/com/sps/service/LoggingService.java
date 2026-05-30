@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -18,6 +19,7 @@ public class LoggingService {
 
     public LoggingEntity saveLog(LoggingEntity loggingEntity) {
     try {
+        loggingEntity.setCreatedDate(LocalDateTime.now());
         return logginRepository.save(loggingEntity);
     }catch (Exception e) {
         throw e;
@@ -32,7 +34,7 @@ public class LoggingService {
         }
     }
 
-    @PostAuthorize("returnObject.createdByName == authentication.details.userName")
+//    @PostAuthorize("returnObject.createdByName == authentication.details.userName")
     public LoggingEntity getLoggedById(int id) {
         try{
             return this.logginRepository.findById(id).
