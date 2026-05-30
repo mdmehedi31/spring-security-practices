@@ -11,6 +11,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -20,6 +21,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity // For enabling method level security
 public class SecurityConfig {
 
     @Autowired
@@ -32,10 +34,10 @@ public class SecurityConfig {
         .authorizeHttpRequests(
                 auth->auth.requestMatchers("/auth/**").
                         permitAll().
-                        requestMatchers("/user/gets").hasRole(Role.USER.name()).
-                        requestMatchers(HttpMethod.POST,"/msg/**").hasAuthority(Permission.WRITE.name()).
-                        requestMatchers(HttpMethod.PUT,"/msg/**").hasAuthority(Permission.WRITE.name()).
-                        requestMatchers(HttpMethod.DELETE,"/msg/**").hasAuthority(Permission.PER_DELETE.name()).
+                    //    requestMatchers("/user/gets").hasRole(Role.USER.name()).
+                   //     requestMatchers(HttpMethod.POST,"/msg/**").hasAuthority(Permission.WRITE.name()).
+                    //    requestMatchers(HttpMethod.PUT,"/msg/**").hasAuthority(Permission.WRITE.name()).
+                    //    requestMatchers(HttpMethod.DELETE,"/msg/**").hasAuthority(Permission.PER_DELETE.name()).
                         anyRequest().
                         authenticated());
         http.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
