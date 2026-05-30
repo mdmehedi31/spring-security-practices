@@ -1,6 +1,6 @@
 package com.sps.config;
 
-
+import com.sps.entity.Role;
 import com.sps.entity.UserEntity;
 import com.sps.entity.UserRepository;
 import org.slf4j.Logger;
@@ -33,7 +33,7 @@ public class UserInitilizer {
                     user.setPhone("098765567789");
                     user.setEmail("admin@gmail.com");
                     user.setGender("male");
-                    user.setRole("ROLE_ADMIN");
+                    user.setRole(Role.ADMIN);
                     users.add(user);
                 }
 
@@ -46,7 +46,7 @@ public class UserInitilizer {
                     user.setPhone("01985754422");
                     user.setEmail("user@gmail.com");
                     user.setGender("male");
-                    user.setRole("ROLE_USER");
+                    user.setRole(Role.USER);
                     users.add(user);
                 }
 

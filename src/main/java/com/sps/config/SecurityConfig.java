@@ -1,10 +1,13 @@
 package com.sps.config;
 
+import com.sps.entity.Permission;
+import com.sps.entity.Role;
 import com.sps.filter.JwtAuthFilter;
 import com.sps.service.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -29,7 +32,10 @@ public class SecurityConfig {
         .authorizeHttpRequests(
                 auth->auth.requestMatchers("/auth/**").
                         permitAll().
-                        requestMatchers("/user/gets").hasRole("USER").
+                        requestMatchers("/user/gets").hasRole(Role.USER.name()).
+                        requestMatchers(HttpMethod.POST,"/msg/**").hasAuthority(Permission.WRITE.name()).
+                        requestMatchers(HttpMethod.PUT,"/msg/**").hasAuthority(Permission.WRITE.name()).
+                        requestMatchers(HttpMethod.DELETE,"/msg/**").hasAuthority(Permission.PER_DELETE.name()).
                         anyRequest().
                         authenticated());
         http.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);

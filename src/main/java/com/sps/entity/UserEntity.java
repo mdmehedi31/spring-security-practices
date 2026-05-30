@@ -5,7 +5,10 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "users")
@@ -37,8 +40,9 @@ public class UserEntity implements UserDetails {
     @Column(name = "password")
     private String password;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "role")
-    private String role;
+    private Role role;
 
     public Integer getId() {
         return id;
@@ -98,7 +102,22 @@ public class UserEntity implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role));
+
+        // TODO
+        /*
+           1. Here we need to do two thing one is set role of that user,
+           2. Set collection of permission of that user
+        */
+        Set<SimpleGrantedAuthority> authorities = new HashSet<SimpleGrantedAuthority>();
+        authorities.add(new SimpleGrantedAuthority("ROLE_"+this.role.name()));
+
+        Set<SimpleGrantedAuthority> permissions = role.getPermissions().stream().map(permission ->
+                        new SimpleGrantedAuthority(permission.name()))
+                .collect(Collectors.toSet());
+
+        authorities.addAll(permissions);
+
+        return authorities;
     }
 
     public String getPassword() {
@@ -134,11 +153,11 @@ public class UserEntity implements UserDetails {
         this.password = password;
     }
 
-    public String getRole() {
+    public Role getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(Role role) {
         this.role = role;
     }
 }
